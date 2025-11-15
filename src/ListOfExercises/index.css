@@ -1,0 +1,20 @@
+.exercises {
+    margin: 20px;
+    max-width: 100%;
+}
+
+.containerListExercises {
+    width: 100%;
+    margin: 40px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.containerTimer {
+    width: 100%;
+    margin: 40px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

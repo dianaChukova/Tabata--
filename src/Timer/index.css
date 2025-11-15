@@ -1,0 +1,27 @@
+.timer {
+    background-color: #233d4d;
+    padding: 20px;
+    color: #f3e6d8;
+    border: 1px solid black;
+    border-radius: 10px;
+    max-width: 225px;
+    width: 100%;
+}
+
+.timerItem {
+    font-size: 24px;
+    padding: 10px;
+}
+
+.timerButton {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.button {
+    background-color: #fe7f2d;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 15px;
+}
