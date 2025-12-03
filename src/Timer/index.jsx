@@ -2,10 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import "./index.css"
 import "../App.css"
 
-// const WORK_TIME = 3 //20
-// const REST_TIME = 3 //10
-// const TOTAL_ROUNDS = 2 //8
-
 function Timer({ isActive, onFinish, onRepeat, rounds, workTime, restTime }) {
     const [isPaused, setIsPaused] = useState(false)
     const [timeRemaining, setTimeRemaining] = useState(workTime)
@@ -24,13 +20,13 @@ function Timer({ isActive, onFinish, onRepeat, rounds, workTime, restTime }) {
 
     useEffect(() => {
         if (!isRunning) {
-            setIsPaused(false);
-            setTimeRemaining(workTime);
-            setCurrentPhase('Выполнение');
-            setCurrentRound(1);
-            if (onFinish) onFinish(false);
+            setIsPaused(false)
+            setTimeRemaining(workTime)
+            setCurrentPhase('Выполнение')
+            setCurrentRound(1)
+            if (onFinish) onFinish(false)
         }
-    }, [workTime, restTime, rounds]);
+    }, [workTime, restTime, rounds])
     
     const handlePhaseTransition = useCallback(() => {
         if (currentPhase === 'Выполнение') {
@@ -39,7 +35,6 @@ function Timer({ isActive, onFinish, onRepeat, rounds, workTime, restTime }) {
             if (nextRound > rounds) {
                 setCurrentPhase('Закончили')
                 setTimeRemaining(0)
-                // setIsPaused(true)
                 if (onFinish) onFinish(true)
                 return
             }
@@ -48,15 +43,13 @@ function Timer({ isActive, onFinish, onRepeat, rounds, workTime, restTime }) {
             setTimeRemaining(restTime)
 
         } else if (currentPhase === 'Отдых') { 
-            // setCurrentRound(currentRound + 1)
-            setCurrentRound(prev => prev + 1);
+            setCurrentRound(prev => prev + 1)
             setCurrentPhase('Выполнение')
             setTimeRemaining(workTime)
         }
     }, [currentPhase, currentRound, restTime, workTime, rounds, onFinish])
 
     useEffect(() => {
-        // let intervalId
         let intervalId = null
 
         if (isRunning) {
@@ -71,9 +64,8 @@ function Timer({ isActive, onFinish, onRepeat, rounds, workTime, restTime }) {
                 })
             }, 1000)
         }
-        // return () => clearInterval(intervalId)
         return () => {
-            if (intervalId) clearInterval(intervalId);
+            if (intervalId) clearInterval(intervalId)
         }
     }, [isRunning, handlePhaseTransition])
 
