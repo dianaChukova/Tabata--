@@ -35,7 +35,7 @@ const AddingExercises = ({onAdd, visible, onClose}) => {
             <div>Название:</div>
             <input type="text" value={name} onChange={(e) => setName(e.target.value)}></input>
             <div>Раунды:</div>
-                <input type="number" min="1" value={rounds} onChange={(e) => setRounds(Number(e.target.value))}></input>
+                <input type="number" min="1" value={rounds} onChange={(e) => setRounds(e.target.value)}></input>
             <div>Время работы:</div>
                 <input type="number" min="1" value={workTime} onChange={(e) => setWorkTime(e.target.value)}></input>
             <div>Время отдыха:</div>

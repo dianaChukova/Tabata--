@@ -26,7 +26,7 @@ function Timer({ isActive, onFinish, onRepeat, rounds, workTime, restTime }) {
             setCurrentRound(1)
             if (onFinish) onFinish(false)
         }
-    }, [workTime, restTime, rounds])
+    },[])
     
     const handlePhaseTransition = useCallback(() => {
         if (currentPhase === 'Выполнение') {
@@ -43,7 +43,7 @@ function Timer({ isActive, onFinish, onRepeat, rounds, workTime, restTime }) {
             setTimeRemaining(restTime)
 
         } else if (currentPhase === 'Отдых') { 
-            setCurrentRound(prev => prev + 1)
+            setCurrentRound(rounds)
             setCurrentPhase('Выполнение')
             setTimeRemaining(workTime)
         }

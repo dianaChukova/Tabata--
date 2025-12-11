@@ -9,7 +9,7 @@ import DeleteExercises from '../DeleteExercises';
 const LOCAL_STORAGE_KEY = "fitness_exercises"
 
 const EXERCISES = [
-    { id: 1, name: "Приседания", rounds: 8, workTime: 20, restTime: 10},
+    { id: 1, name: "Приседания", rounds: 2, workTime: 20, restTime: 10},
     { id: 2, name: "Отжимания", rounds: 8, workTime: 20, restTime: 10 },
     { id: 3, name: "Планка", rounds: 8, workTime: 20, restTime: 10 },
     { id: 4, name: "Выпады", rounds: 8, workTime: 20, restTime: 10 },
