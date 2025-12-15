@@ -15,8 +15,7 @@ function Timer({ isActive, onFinish, onRepeat, rounds, workTime, restTime }) {
         setTimeRemaining(workTime)
         setCurrentPhase('Выполнение')
         setCurrentRound(1)
-        if (onFinish) onFinish(false)
-    }, [onFinish, workTime])
+    }, [workTime])
 
     useEffect(() => {
         if (!isRunning) {
@@ -26,8 +25,8 @@ function Timer({ isActive, onFinish, onRepeat, rounds, workTime, restTime }) {
             setCurrentRound(1)
             if (onFinish) onFinish(false)
         }
-    },[])
-    
+    }, [])
+
     const handlePhaseTransition = useCallback(() => {
         if (currentPhase === 'Выполнение') {
             const nextRound = currentRound + 1

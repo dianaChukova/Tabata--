@@ -9,7 +9,7 @@ import DeleteExercises from '../DeleteExercises';
 const LOCAL_STORAGE_KEY = "fitness_exercises"
 
 const EXERCISES = [
-    { id: 1, name: "Приседания", rounds: 2, workTime: 20, restTime: 10},
+    { id: 1, name: "Приседания", rounds: 8, workTime: 20, restTime: 10},
     { id: 2, name: "Отжимания", rounds: 8, workTime: 20, restTime: 10 },
     { id: 3, name: "Планка", rounds: 8, workTime: 20, restTime: 10 },
     { id: 4, name: "Выпады", rounds: 8, workTime: 20, restTime: 10 },
@@ -53,12 +53,15 @@ const ListExercises = () => {
         if (!wasSuccessful){
             setIsTimerActive(false)
             setCurrentExercise(null)
-             setSelectedExercise(null)
+            setSelectedExercise(null)
         }
     }
 
     const handleTimerRepeat = () => {
-        setIsTimerActive(true)
+        if (!selectedExercise) {
+            setIsTimerActive(false)
+            setCurrentExercise(null)
+        }
     }
 
     const handleAddExercise = (exercise) => {
@@ -67,6 +70,12 @@ const ListExercises = () => {
     }
 
     const handleDeleteExerciseWrapper = (idToDelete) => {
+        if (selectedExercise && selectedExercise.id === idToDelete) {
+            setIsTimerActive(false)
+            setCurrentExercise(null)
+            setSelectedExercise(null)
+        }
+
         DeleteExercises(
             idToDelete,
             exercises, 
