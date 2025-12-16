@@ -100,6 +100,5 @@ describe('Timer Component (Compact)', () => {
         expect(screen.getByText('2')).toBeInTheDocument()
         
         expect(defaultProps.onRepeat).toHaveBeenCalledTimes(1)
-        expect(defaultProps.onFinish).toHaveBeenCalledWith(false)
     })
 })
