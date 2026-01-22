@@ -1,10 +1,10 @@
-import React, { useState, useEffect} from 'react';
+import { useState, useEffect} from 'react';
 import Timer from "../Timer"
-import TimerTrigger from "../Timer/TimerTrigger"
+import TimerTrigger from "../Timer/TimerTrigger/index.jsx"
 import "./index.css"
 import "../App.css"
 import AddingExercises  from "../AddingExercises"
-import DeleteExercises from '../DeleteExercises';
+import DeleteExercises from '../utils/index.js';
 
 const LOCAL_STORAGE_KEY = "fitness_exercises"
 
@@ -25,7 +25,7 @@ const ListExercises = () => {
             const storedExercises = localStorage.getItem(LOCAL_STORAGE_KEY)
             return storedExercises ? JSON.parse(storedExercises) : EXERCISES
         } catch (error) {
-            console.error("Не удалось сохранить упражнение", error)
+            console.error("Не удалось загрузить упражнение из LS", error)
             return EXERCISES
         }
     })
@@ -44,9 +44,7 @@ const ListExercises = () => {
             setIsTimerActive(true)
             setCurrentExercise(exercise.name)
             setSelectedExercise(exercise)
-        } else {
-            alert(`Таймер уже запущен для: ${currentExercise}`)
-        }
+        } 
     }
 
     const handleTimerFinish = (wasSuccessful) => {
@@ -69,32 +67,28 @@ const ListExercises = () => {
         setExercises(prev => [...prev, newEx])
     }
 
-    const handleDeleteExerciseWrapper = (idToDelete) => {
-        if (selectedExercise && selectedExercise.id === idToDelete) {
-            setIsTimerActive(false)
-            setCurrentExercise(null)
-            setSelectedExercise(null)
-        }
-
-        DeleteExercises(
-            idToDelete,
+    const handleDelete = (id) => {
+        const { updatedList, isDeletingActive } = DeleteExercises(
+            id, 
             exercises, 
-            setExercises, 
-            selectedExercise, 
-            setIsTimerActive, 
-            setCurrentExercise, 
-            setSelectedExercise 
+            selectedExercise?.id
         )
+
+        if (isDeletingActive) {
+            handleTimerFinish()
+        }
+        setExercises(updatedList)
     }
+
 
     return (
         <div className='containerTimer'>
             {isTimerActive ? (
                 <>
                     <div className='title'>Выполняется: {currentExercise}</div>
-                    <Timer isActive={isTimerActive} onFinish={handleTimerFinish} onRepeat={handleTimerRepeat} rounds={selectedExercise.rounds} workTime={selectedExercise.workTime} restTime={selectedExercise.restTime} />
+                    <Timer isActive={isTimerActive} onFinish={handleTimerFinish}  onRepeat={handleTimerRepeat} rounds={selectedExercise.rounds} workTime={selectedExercise.workTime} restTime={selectedExercise.restTime} />
                     {selectedExercise && (
-                        <button className='buttons' onClick={() => handleDeleteExerciseWrapper(selectedExercise.id)}>Удалить упражнение</button>
+                        <button className='buttons' onClick={() => handleDelete(selectedExercise.id)}>Удалить упражнение</button>
                     )}
                 </>
             ) : (

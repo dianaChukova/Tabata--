@@ -26,6 +26,11 @@ const AddingExercises = ({onAdd, visible, onClose}) => {
             restTime: Number(restTime),
         }
 
+        if (!rounds || !workTime || !restTime || isNaN(rounds) || isNaN(workTime) || isNaN(restTime) || rounds <= 0 || workTime <= 0 || restTime <= 0) {
+            alert("Пожалуйста, заполните все числовые поля значениями больше 0")
+            return
+        }
+
         if (typeof onAdd === "function") onAdd(newExercise)
         if (typeof onClose === "function") onClose()
     }
@@ -35,11 +40,11 @@ const AddingExercises = ({onAdd, visible, onClose}) => {
             <div>Название:</div>
             <input type="text" value={name} onChange={(e) => setName(e.target.value)}></input>
             <div>Раунды:</div>
-                <input type="number" min="1" value={rounds} onChange={(e) => setRounds(e.target.value)}></input>
-            <div>Время работы:</div>
-                <input type="number" min="1" value={workTime} onChange={(e) => setWorkTime(e.target.value)}></input>
-            <div>Время отдыха:</div>
-            <input type="number" min="1" value={restTime} onChange={(e) => setRestTime(e.target.value)}></input>
+                <input type="number" min="1" max="50" value={rounds} onChange={(e) => setRounds(e.target.value)}></input>
+            <div>Время работы <span className="unitOfMeasurement">(сек)</span>:</div>
+                <input type="number" min="1" max="3600" value={workTime} onChange={(e) => setWorkTime(e.target.value)}></input>
+            <div>Время отдыха <span className="unitOfMeasurement">(сек)</span>:</div>
+            <input type="number" min="1" max="3600" value={restTime} onChange={(e) => setRestTime(e.target.value)}></input>
 
             <div className="controlsButton">
                 <button type="submit" className="button">Сохранить</button>

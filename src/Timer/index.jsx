@@ -13,9 +13,17 @@ function Timer({ isActive, onFinish, onRepeat, rounds, workTime, restTime }) {
     const beepSoundRef = useRef(null)
 
     useEffect(() => {
-        beepSoundRef.current = new Audio('/sound.mp3')
-        beepSoundRef.current.volume = 0.3
-        beepSoundRef.current.load()
+        const audio = new Audio('/sound.mp3')
+        audio.volume = 0.3
+        beepSoundRef.current = audio
+
+        return () => {
+            if (beepSoundRef.current) {
+                beepSoundRef.current.pause() 
+                beepSoundRef.current.currentTime = 0
+                beepSoundRef.current = null 
+            }
+        }
     }, [])
 
     const playSound = useCallback(() => {
@@ -25,44 +33,48 @@ function Timer({ isActive, onFinish, onRepeat, rounds, workTime, restTime }) {
                 return beepSoundRef.current.play()
             } catch (error) {
                 console.log("Ошибка воспроизведения звука:", error.message)
-                setIsSoundPlaying(false)
                 return Promise.reject(error)
             }
         }
     }, [])
 
     useEffect(() => {
-        if (isActive && !isPaused && !isSoundPlaying) {
+        let isMounted = true
+
+        if (isActive && !isPaused && isInitialStart) {
             const startTimerWithSound = async () => {
                 try {
                     setIsSoundPlaying(true)
-                    await playSound()    
+                    await playSound()
 
-                    const checkSoundEnd = () => {
-                        return new Promise((resolve) => {
-                            const onEnded = () => {
-                                beepSoundRef.current.removeEventListener('ended', onEnded)
-                                resolve()
-                            }
-                            
-                            beepSoundRef.current.addEventListener('ended', onEnded)
-                        })
+                    const onEnded = () => {
+                        if (isMounted) {
+                            setIsSoundPlaying(false)
+                            setIsInitialStart(false) 
+                        }
                     }
-                    await checkSoundEnd()
+
+                    beepSoundRef.current?.addEventListener('ended', onEnded, { once: true })
                     
-                    if (isInitialStart) {
+                    setTimeout(() => {
+                        if (isMounted && isInitialStart) {
+                            onEnded()
+                        }
+                    }, 5000)
+                } catch (error) {
+                    if (isMounted) {
+                        setIsSoundPlaying(false)
                         setIsInitialStart(false)
                     }
-                    
-                } catch (error) {
-                    console.log("Не удалось воспроизвести звук, запускаем таймер сразу")
-                    setIsSoundPlaying(false)
                 }
             }
-            
             startTimerWithSound()
         }
-    }, [isActive, isPaused, isSoundPlaying, playSound, isInitialStart])
+
+        return () => {
+            isMounted = false
+        }
+    }, [isActive, isPaused, isInitialStart, playSound])
 
     const isRunning = isActive && !isPaused && currentPhase !== 'Закончили'
 
@@ -76,14 +88,14 @@ function Timer({ isActive, onFinish, onRepeat, rounds, workTime, restTime }) {
     }, [workTime])
 
     useEffect(() => {
-        if (!isRunning) {
+        if (!isActive) {
             setIsPaused(false)
             setTimeRemaining(workTime)
             setCurrentPhase('Выполнение')
             setCurrentRound(1)
-            if (onFinish) onFinish(false)
-        } 
-    }, [])
+            setIsInitialStart(true)
+        }
+    }, [isActive, workTime])
 
     const handlePhaseTransition = useCallback(() => {
         if (currentPhase === 'Выполнение') {
@@ -101,7 +113,7 @@ function Timer({ isActive, onFinish, onRepeat, rounds, workTime, restTime }) {
             setTimeRemaining(restTime)
 
         } else if (currentPhase === 'Отдых') { 
-            setCurrentRound(rounds)
+            setCurrentRound(currentRound + 1)
             setCurrentPhase('Выполнение')
             setTimeRemaining(workTime)
         }
@@ -173,7 +185,7 @@ function Timer({ isActive, onFinish, onRepeat, rounds, workTime, restTime }) {
                     <h2>Отличная работа!</h2>
                     <div className='timerButton'>
                         <button className='button' onClick={handleRepeat}>Повторить</button>
-                        <button  className='button' onClick={handleExit}>Выйти</button>
+                        <button className='button' onClick={handleExit}>Выйти</button>
                     </div>
                 </>
             )}
